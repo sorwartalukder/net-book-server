@@ -14,6 +14,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function run() {
     const userCollection = client.db('netBook').collection('users')
+    const noteCollection = client.db('netBook').collection('notes')
     // add user database 
     app.post('/users', async (req, res) => {
         const newUser = req.body;
@@ -24,6 +25,11 @@ async function run() {
             return res.send(result)
         }
         res.send({ message: 'already store data' })
+    })
+    app.post('/notes', async (req, res) => {
+        const note = req.body;
+        const result = await noteCollection.insertOne(note)
+        res.send(result)
     })
 }
 
