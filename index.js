@@ -15,6 +15,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     const userCollection = client.db('netBook').collection('users')
     const noteCollection = client.db('netBook').collection('notes')
+    const commentCollection = client.db('netBook').collection('comment')
 
     //send notes client
     app.get('/notes/:email', async (req, res) => {
@@ -55,6 +56,12 @@ async function run() {
     app.post('/notes', async (req, res) => {
         const note = req.body;
         const result = await noteCollection.insertOne(note)
+        res.send(result)
+    })
+    // add comment
+    app.post('/comments', async (req, res) => {
+        const note = req.body;
+        const result = await commentCollection.insertOne(note)
         res.send(result)
     })
     //update note
