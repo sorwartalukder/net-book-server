@@ -24,6 +24,14 @@ async function run() {
         const notes = allNote.filter(n => !n.completed)
         res.send(notes);
     })
+    //send note client
+    app.get('/note/:id', async (req, res) => {
+        const id = req.params.id
+        const query = { _id: ObjectId(id) }
+        const note = await noteCollection.findOne(query)
+        res.send(note);
+    })
+
     //send completed notes client
     app.get('/completed-notes/:email', async (req, res) => {
         const email = req.params.email
@@ -43,10 +51,22 @@ async function run() {
         }
         res.send({ message: 'already store data' })
     })
+    // add note
     app.post('/notes', async (req, res) => {
         const note = req.body;
         const result = await noteCollection.insertOne(note)
         res.send(result)
+    })
+    //update note
+    app.put('/note/:id', async (req, res) => {
+        const id = req.params.id
+        const note = req.body;
+        const filter = { _id: ObjectId(id) };
+        const updatedDoc = {
+            $set: note
+        }
+        const result = await noteCollection.updateOne(filter, updatedDoc);
+        res.send(result);
     })
     // update completed situation
     app.put('/notes/:id', async (req, res) => {
@@ -60,6 +80,7 @@ async function run() {
         const result = await noteCollection.updateOne(filter, updatedDoc, options);
         res.send(result);
     })
+    // delete note
     app.delete('/notes/:id', async (req, res) => {
         const id = req.params.id;
         const query = { _id: ObjectId(id) }
