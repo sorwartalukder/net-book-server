@@ -41,6 +41,13 @@ async function run() {
         const notes = allNote.filter(n => n.completed)
         res.send(notes);
     })
+    //send comments client
+    app.get('/comments/:id', async (req, res) => {
+        const id = req.params.id
+        const query = { commentID: id }
+        const comments = await commentCollection.find(query, { sort: { _id: -1 } }).toArray()
+        res.send(comments);
+    })
     // add user database 
     app.post('/users', async (req, res) => {
         const newUser = req.body;
